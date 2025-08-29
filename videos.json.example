@@ -1,0 +1,26 @@
+[
+  {
+    "id": "intro-to-python",
+    "title": "Python入门快速教程",
+    "description": "这是一段关于Python基础语法的快速入门介绍，适合零基础的初学者观看。内容涵盖变量、数据类型和循环。",
+    "thumbnail": "thumbnails/intro-to-python.jpg",
+    "hls_url": "hls_videos_optimized/intro-to-python.m3u8",
+    "duration": "15:30"
+  },
+  {
+    "id": "nginx-basic-setup",
+    "title": "Nginx 基础配置指南",
+    "description": "学习如何在Linux服务器上安装和配置Nginx，作为你的第一个Web服务器。",
+    "thumbnail": "thumbnails/nginx-basic-setup.jpg",
+    "hls_url": "hls_videos_optimized/nginx-basic-setup.m3u8",
+    "duration": "22:05"
+  },
+  {
+    "id": "web-development-tips",
+    "title": "前端开发实用技巧分享",
+    "description": "分享一些前端开发中的实用技巧和最佳实践，帮助提高开发效率。",
+    "thumbnail": "thumbnails/web-development-tips.jpg",
+    "hls_url": "hls_videos_optimized/web-development-tips.m3u8",
+    "duration": "18:42"
+  }
+]

@@ -1,0 +1,21 @@
+# 智能视频自动化处理系统依赖包
+# Author: nya~ 🐱
+
+# 核心依赖
+watchdog>=2.1.9        # 文件监控
+psutil>=5.9.0          # 系统监控
+
+# JSON和数据处理 (Python内置，无需额外安装)
+# json, pathlib, threading, subprocess 等都是内置模块
+
+# 可选依赖 (用于AI功能扩展)
+# openai>=0.27.0       # OpenAI API (未来AI功能)
+# requests>=2.28.0     # HTTP请求 (未来API功能)
+
+# 系统要求:
+# - Python 3.7+
+# - FFmpeg (系统级安装)
+# - FFprobe (通常与FFmpeg一起安装)
+
+# 安装命令:
+# pip install -r auto_processor_requirements.txt 

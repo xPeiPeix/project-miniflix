@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Miniflix - 课程视频展示</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="page-title">📚 精品课程视频</h1>
+        
+        <div class="loading" id="loading">
+            正在加载视频列表...
+        </div>
+        
+        <div class="video-grid" id="videoGrid" style="display: none;">
+            <!-- 视频卡片将通过JavaScript动态生成 -->
+        </div>
+        
+        <div class="error-message" id="errorMessage" style="display: none;">
+            <h3>😔 加载失败</h3>
+            <p>无法加载视频列表，请检查网络连接或稍后再试。</p>
+        </div>
+    </div>
+
+    <script src="js/gallery.js"></script>
+</body>
+</html> 

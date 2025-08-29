@@ -1,0 +1,238 @@
+# Project Miniflix - Git忽略文件
+# 确保个人数据和运行时文件不被上传到GitHub
+
+# =============================================================================
+# 个人视频内容 (绝对不上传)
+# =============================================================================
+
+# 原始视频文件
+videos/
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.flv
+*.wmv
+*.webm
+
+# 处理后的HLS文件
+hls_videos_optimized/
+*.m3u8
+*.ts
+
+# 视频缩略图
+thumbnails/
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.webp
+
+# 视频数据库(包含个人信息)
+videos.json
+
+# =============================================================================
+# 系统运行数据
+# =============================================================================
+
+# 日志文件
+logs/
+*.log
+*.log.*
+*.out
+
+# 备份文件
+backup/
+*.backup
+*.bak
+
+# 已删除视频记录
+delete_videos/
+
+# 问题追踪文件(可能包含个人路径)
+issues/
+*.md.bak
+
+# 临时文件
+temp/
+tmp/
+*.tmp
+*.temp
+
+# =============================================================================
+# Python相关
+# =============================================================================
+
+# 字节码文件
+__pycache__/
+*.py[cod]
+*$py.class
+
+# 分布文件
+*.so
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# 单元测试
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# 环境变量
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE配置
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# =============================================================================
+# 系统配置文件 (包含本地路径和敏感信息)
+# =============================================================================
+
+# Nginx本地配置
+nginx.conf
+*.conf
+!nginx.conf.example
+
+# SSL证书
+*.pem
+*.key
+*.crt
+*.csr
+
+# 数据库文件
+*.db
+*.sqlite
+*.sqlite3
+
+# 配置文件(可能包含敏感信息)
+config.local.*
+settings.local.*
+.secrets
+
+# =============================================================================
+# 操作系统文件
+# =============================================================================
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# =============================================================================
+# 开发和测试文件
+# =============================================================================
+
+# 测试输出
+test_output/
+test_videos/
+sample_videos/
+
+# 开发笔记
+notes.txt
+TODO.txt
+NOTES.md
+
+# 编辑器临时文件
+*.swp
+*.swo
+*.tmp
+*.bak
+
+# =============================================================================
+# 允许的示例和模板文件 (这些会被上传)
+# =============================================================================
+
+# 取消忽略示例配置文件
+!videos.json.example
+!nginx.conf.example
+!.env.example
+
+# 取消忽略文档图片
+!docs/images/
+!docs/*.png
+!docs/*.jpg
+
+# 取消忽略项目logo或演示图片
+!assets/
+!demo/
+!screenshots/
+
+# =============================================================================
+# 特殊说明
+# =============================================================================
+
+# 如果需要添加示例视频文件，创建单独的目录
+# !demo_videos/
+# !sample_content/
+
+# 本地开发时的临时忽略
+# 如果有其他本地特定的文件需要忽略，请在下面添加：
+

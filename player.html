@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>视频播放 - Project Miniflix</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="loading" id="loading">
+            正在加载视频...
+        </div>
+        
+        <div class="player-container" id="playerContainer" style="display: none;">
+            <video id="videoPlayer" class="video-player" controls>
+                您的浏览器不支持视频播放。
+            </video>
+            
+            <div class="video-details">
+                <h1 id="videoTitle">视频标题</h1>
+                <p id="videoDescription">视频描述</p>
+            </div>
+        </div>
+        
+        <div class="error-message" id="errorMessage" style="display: none;">
+            <h3 id="errorTitle">😔 播放失败</h3>
+            <p id="errorText">无法加载视频，请检查网络连接或稍后再试。</p>
+            <div class="error-actions" id="errorActions" style="display: none;">
+                <button class="retry-button" id="retryButton" onclick="retryVideo()">🔄 重试</button>
+                <button class="refresh-button" id="refreshButton" onclick="window.location.reload()">🔃 刷新页面</button>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="index.html" class="back-button">← 返回视频列表</a>
+        </div>
+    </div>
+
+    <!-- HLS.js 库 - 本地版本 -->
+    <script src="lib/hls.min.js"></script>
+    <script src="js/player.js"></script>
+</body>
+</html> 

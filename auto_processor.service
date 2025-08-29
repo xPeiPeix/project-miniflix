@@ -1,0 +1,46 @@
+[Unit]
+Description=智能视频自动化处理系统 (nya~ Auto Video Processor)
+After=network.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=peipei
+Group=peipei
+WorkingDirectory=/home/peipei/show_media
+Environment=PYTHONPATH=/home/peipei/show_media
+ExecStart=/usr/bin/python3 /home/peipei/show_media/run_auto_processor.py
+ExecStop=/usr/bin/python3 /home/peipei/show_media/run_auto_processor.py --stop
+
+# 重启策略
+Restart=always
+RestartSec=10
+StartLimitBurst=3
+StartLimitInterval=60
+
+# 日志配置
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=auto-video-processor
+
+# 资源限制
+MemoryMax=2G
+TasksMax=50
+
+# 安全配置
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/peipei/show_media
+
+[Install]
+WantedBy=multi-user.target
+
+# 安装和使用说明:
+# 1. 复制文件: sudo cp auto_processor.service /etc/systemd/system/
+# 2. 重载服务: sudo systemctl daemon-reload
+# 3. 启用服务: sudo systemctl enable auto_processor
+# 4. 启动服务: sudo systemctl start auto_processor
+# 5. 查看状态: sudo systemctl status auto_processor
+# 6. 查看日志: sudo journalctl -u auto_processor -f 
