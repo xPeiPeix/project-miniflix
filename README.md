@@ -167,39 +167,30 @@ cp videos.json.example videos.json
 nano videos.json
 ```
 
-### 运行项目
+### 快速启动
 
-#### 方式一：开发模式
+#### 开发测试
 ```bash
-# 启动自动处理系统(测试模式)
+# 1. 启动视频处理系统
 python run_auto_processor.py --test
 
-# 启动Web服务器(另一个终端)
+# 2. 启动Web服务器
 python -m http.server 8000
 # 访问: http://localhost:8000
 ```
 
-#### 方式二：生产模式
+#### 生产部署
 ```bash
-# 启动自动处理系统
-python run_auto_processor.py
-
-# 配置并启动Nginx
-sudo cp nginx.conf.example /etc/nginx/sites-available/miniflix
-sudo ln -s /etc/nginx/sites-available/miniflix /etc/nginx/sites-enabled/
-sudo systemctl reload nginx
-```
-
-#### 方式三：系统服务
-```bash
-# 安装为系统服务
+# 1. 安装为系统服务
 sudo cp auto_processor.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable auto_processor
 sudo systemctl start auto_processor
 
-# 查看运行状态
-python run_auto_processor.py --status
+# 2. 配置Nginx
+sudo cp nginx.conf.example /etc/nginx/sites-available/miniflix
+sudo ln -s /etc/nginx/sites-available/miniflix /etc/nginx/sites-enabled/
+sudo systemctl reload nginx
 ```
 
 ---
@@ -250,54 +241,33 @@ project-miniflix/
 
 ---
 
-## 🛠️ 使用说明
+## 🛠️ 开发指南
 
-### 添加新视频
-
-1. **放置视频文件**
+### 添加视频
 ```bash
-# 将视频文件放入videos目录
+# 将视频文件放入videos目录，系统会自动处理
 cp your-video.mp4 videos/
-```
 
-2. **自动处理**
-   - 如果自动处理系统正在运行，会自动检测并处理
-   - 处理包括：HLS转码、生成缩略图、更新数据库
-
-3. **手动处理**
-```bash
-# 扫描并处理现有文件
+# 手动扫描处理现有文件
 python run_auto_processor.py --scan-only
 ```
 
 ### 系统管理
-
 ```bash
-# 查看系统状态
+# 查看状态
 python run_auto_processor.py --status
 
 # 停止服务
 python run_auto_processor.py --stop
 
-# 测试模式运行
+# 测试模式
 python run_auto_processor.py --test
 ```
 
-### 配置文件说明
-
-#### `videos.json` 格式
-```json
-[
-  {
-    "id": "unique-video-id",
-    "title": "视频标题",
-    "description": "视频描述",
-    "thumbnail": "thumbnails/video-thumb.jpg",
-    "hls_url": "hls_videos_optimized/video.m3u8",
-    "duration": "mm:ss"
-  }
-]
-```
+### 自定义配置
+- 修改 `auto_processor/config.py` 调整视频处理参数
+- 编辑 `nginx.conf.example` 配置Web服务器
+- 手动编辑 `videos.json` 自定义视频信息（系统会保护用户修改）
 
 ---
 
@@ -335,52 +305,29 @@ graph LR
 
 ---
 
-## 🔧 高级配置
+## 🔧 配置说明
 
-### HTTPS配置
-
-1. **获取SSL证书**
-```bash
-# 使用Let's Encrypt
-sudo certbot --nginx -d your-domain.com
+### 修改端口
+编辑 `nginx.conf.example` 中的端口设置：
+```nginx
+listen 8080;  # 修改为你需要的端口
 ```
 
-2. **Nginx HTTPS配置**
-```nginx
-server {
-    listen 443 ssl;
-    server_name your-domain.com;
-    
-    ssl_certificate /path/to/cert.pem;
-    ssl_certificate_key /path/to/key.pem;
-    
-    # ... 其他配置
+### 视频处理参数
+编辑 `auto_processor/config.py` 调整：
+```python
+"video_processing": {
+    "segment_time": 3,      # HLS分片时长
+    "crf": 23,             # 视频质量 (18-28)
+    "maxrate": "1500k"     # 最大码率
 }
 ```
 
-### 端口修改
-
-修改Nginx配置文件中的 `listen` 指令：
-```nginx
-# 自定义端口
-listen 8080;
-# 或 HTTPS自定义端口
-listen 8443 ssl;
-```
-
-### 多站点部署
-
-```nginx
-# 基于域名的虚拟主机
-server {
-    server_name video.yourdomain.com;
-    # Miniflix配置
-}
-
-server {
-    server_name api.yourdomain.com;
-    # 其他应用配置
-}
+### 系统服务配置
+修改 `auto_processor.service` 中的路径：
+```ini
+WorkingDirectory=/your/project/path
+ExecStart=/usr/bin/python3 /your/project/path/run_auto_processor.py
 ```
 
 ---
@@ -411,14 +358,6 @@ python run_auto_processor.py --scan-only
 
 ---
 
-## 📈 更新历史
-
-- **v1.0.0** (2024-01-XX) - 初始版本发布
-- **v1.1.0** (2024-XX-XX) - 添加自动处理系统
-- **v1.2.0** (2024-XX-XX) - 优化UI设计和性能
-
----
-
 ## 🤝 贡献指南
 
 1. Fork 本项目
@@ -444,10 +383,9 @@ python run_auto_processor.py --scan-only
 ---
 
 <div align="center">
-
 **🎬 Project Miniflix - 让视频分享变得简单美好**
 
-Made with ❤️ by [Your Name]
+Made with ❤️ by nya
 
 [⭐ Star](https://github.com/your-username/project-miniflix) | [🐛 Report Bug](https://github.com/your-username/project-miniflix/issues) | [💡 Request Feature](https://github.com/your-username/project-miniflix/issues)
 
