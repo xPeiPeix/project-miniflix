@@ -181,15 +181,32 @@ python -m http.server 8000
 
 #### 生产部署
 ```bash
-# 1. 安装为系统服务
+# 1. 修改配置文件
+# 更新项目路径和用户
+sed -i 's|/home/peipei/show_media|'$(pwd)'|g' auto_processor.service
+sed -i 's|User=peipei|User='$(whoami)'|g' auto_processor.service
+
+# 更新nginx配置路径和域名
+cp nginx.conf.example nginx.conf
+sed -i 's|/path/to/your/project-miniflix|'$(pwd)'|g' nginx.conf
+sed -i 's|your-domain.com|localhost|g' nginx.conf
+
+# 2. 安装为系统服务
 sudo cp auto_processor.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable auto_processor
 sudo systemctl start auto_processor
 
-# 2. 配置Nginx
-sudo cp nginx.conf.example /etc/nginx/sites-available/miniflix
+# 3. 配置Nginx (根据系统选择一种方式)
+# 方式A: 使用sites-available (Ubuntu/Debian标准)
+sudo cp nginx.conf /etc/nginx/sites-available/miniflix
 sudo ln -s /etc/nginx/sites-available/miniflix /etc/nginx/sites-enabled/
+
+# 方式B: 使用conf.d (如果没有sites-available目录)
+sudo cp nginx.conf /etc/nginx/conf.d/miniflix.conf
+
+# 4. 设置权限和启动
+sudo chown -R www-data:www-data $(pwd)
 sudo systemctl reload nginx
 ```
 
@@ -254,15 +271,25 @@ python run_auto_processor.py --scan-only
 
 ### 系统管理
 ```bash
-# 查看状态
+# 查看系统服务状态 (推荐)
+sudo systemctl status auto_processor
+
+# 查看脚本内部状态 (仅在直接运行脚本时有效)
 python run_auto_processor.py --status
 
-# 停止服务
-python run_auto_processor.py --stop
+# 停止/启动系统服务
+sudo systemctl stop auto_processor
+sudo systemctl start auto_processor
 
-# 测试模式
+# 测试模式 (需要先停止系统服务)
+sudo systemctl stop auto_processor
 python run_auto_processor.py --test
 ```
+
+**⚠️ 重要说明**：
+- 当使用systemd服务时，用 `systemctl status` 查看服务状态
+- `python run_auto_processor.py --status` 只能检查脚本直接运行的状态
+- 两者使用不同的状态管理机制，不要混淆
 
 ### 自定义配置
 - 修改 `auto_processor/config.py` 调整视频处理参数
@@ -307,27 +334,54 @@ graph LR
 
 ## 🔧 配置说明
 
-### 修改端口
-编辑 `nginx.conf.example` 中的端口设置：
-```nginx
-listen 8080;  # 修改为你需要的端口
+### Nginx配置
+```bash
+# 1. 复制并修改配置文件
+cp nginx.conf.example nginx.conf
+
+# 2. 修改域名设置 (选择一种)
+# 接受所有域名访问
+sed -i 's|your-domain.com|localhost _;|g' nginx.conf
+
+# 或指定具体域名
+sed -i 's|your-domain.com|yourdomain.com|g' nginx.conf
+
+# 3. 修改端口 (可选)
+sed -i 's|listen 80;|listen 8080;|g' nginx.conf
+
+# 4. 设置正确的权限
+sudo chown -R www-data:www-data $(pwd)
+sudo chmod -R 755 $(pwd)
 ```
+
+### 常见Nginx问题
+- **403 Forbidden**: 检查文件权限，确保nginx用户可以访问
+- **sites-available不存在**: 使用 `/etc/nginx/conf.d/` 目录
+- **配置测试**: 使用 `sudo nginx -t` 验证配置
 
 ### 视频处理参数
 编辑 `auto_processor/config.py` 调整：
 ```python
 "video_processing": {
     "segment_time": 3,      # HLS分片时长
-    "crf": 23,             # 视频质量 (18-28)
+    "crf": 23,             # 视频质量 (18-28，越小质量越高)
     "maxrate": "1500k"     # 最大码率
 }
 ```
 
-### 系统服务配置
-修改 `auto_processor.service` 中的路径：
-```ini
-WorkingDirectory=/your/project/path
-ExecStart=/usr/bin/python3 /your/project/path/run_auto_processor.py
+### 故障排除
+```bash
+# 检查服务日志
+sudo journalctl -u auto_processor -f
+
+# 检查nginx日志
+sudo tail -f /var/log/nginx/error.log
+
+# 检查文件权限
+ls -la videos/ hls_videos_optimized/ thumbnails/
+
+# 重启所有服务
+sudo systemctl restart auto_processor nginx
 ```
 
 ---
