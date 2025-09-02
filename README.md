@@ -130,7 +130,7 @@ sequenceDiagram
 
 1. **克隆项目**
 ```bash
-git clone https://github.com/your-username/project-miniflix.git
+git clone https://github.com/xPeiPeix/project-miniflix.git
 cd project-miniflix
 ```
 
@@ -387,6 +387,6 @@ python run_auto_processor.py --scan-only
 
 Made with ❤️ by nya
 
-[⭐ Star](https://github.com/your-username/project-miniflix) | [🐛 Report Bug](https://github.com/your-username/project-miniflix/issues) | [💡 Request Feature](https://github.com/your-username/project-miniflix/issues)
+[⭐ Star](https://github.com/xPeiPeix/project-miniflix) | [🐛 Report Bug](https://github.com/xPeiPeix/project-miniflix/issues) | [💡 Request Feature](https://github.com/xPeiPeix/project-miniflix/issues)
 
 </div>
