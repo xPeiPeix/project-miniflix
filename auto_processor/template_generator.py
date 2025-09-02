@@ -102,7 +102,10 @@ class VideosJsonManager:
                 # 更新或添加视频
                 if existing_index is not None:
                     logger.info(f"更新现有视频元数据: {video_id}")
-                    existing_videos[existing_index] = metadata
+                    # 智能合并策略：保护用户修改的字段
+                    existing_video = existing_videos[existing_index]
+                    merged_metadata = self._merge_metadata(existing_video, metadata)
+                    existing_videos[existing_index] = merged_metadata
                 else:
                     logger.info(f"添加新视频元数据: {video_id}")
                     existing_videos.append(metadata)
@@ -118,7 +121,60 @@ class VideosJsonManager:
             except Exception as e:
                 logger.error(f"更新videos.json失败: {e}")
                 raise
-    
+
+    def _merge_metadata(self, existing_metadata, new_metadata):
+        """智能合并元数据：保护用户修改的字段，更新技术字段"""
+        # 需要保护的用户字段（不会被自动覆盖）
+        protected_fields = ['title', 'description']
+
+        # 需要更新的技术字段（总是使用最新值）
+        technical_fields = ['hls_url', 'duration', 'thumbnail']
+
+        # 创建合并后的元数据
+        merged = existing_metadata.copy()
+
+        # 更新技术字段
+        for field in technical_fields:
+            if field in new_metadata:
+                merged[field] = new_metadata[field]
+
+        # 对于保护字段，只有当现有值为空或明显是自动生成的默认值时才更新
+        for field in protected_fields:
+            if field in new_metadata:
+                existing_value = existing_metadata.get(field, '')
+                new_value = new_metadata[field]
+
+                # 如果现有值为空，使用新值
+                if not existing_value or existing_value.strip() == '':
+                    merged[field] = new_value
+                # 如果现有值是明显的自动生成模式，也可以更新
+                elif self._is_auto_generated_value(existing_value, field):
+                    merged[field] = new_value
+                # 否则保留用户修改的值
+                else:
+                    logger.debug(f"保护用户修改的{field}: {existing_value}")
+
+        # 确保ID字段正确
+        merged['id'] = new_metadata['id']
+
+        return merged
+
+    def _is_auto_generated_value(self, value, field):
+        """判断字段值是否为自动生成的默认值"""
+        if field == 'title':
+            # 检查是否包含典型的自动生成模式
+            auto_patterns = ['视频', '- ', 'lecture-video', 'one-on-one']
+            return any(pattern in value.lower() for pattern in auto_patterns)
+        elif field == 'description':
+            # 检查是否为默认描述模板
+            default_descriptions = [
+                '自动生成的视频内容',
+                '系统性课堂教学，内容丰富全面',
+                '上课采用一对一专业辅导方式'
+            ]
+            return any(desc in value for desc in default_descriptions)
+        return False
+
     def _load_videos_json(self):
         """加载videos.json文件"""
         if not self.videos_json_path.exists():
